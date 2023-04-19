@@ -72,7 +72,7 @@ int main()
 	Text text;
 	//text.setPosition(width / 3, 0);
 	text.setFont(font);
-	text.setString("- Left click to place vertices (at least 3)\n- Then right click to start the game.\n- Press Esc to quit.");
+	text.setString("- Left click to place vertices\n- Then right click to start the game.\n- Press Esc to quit.");
 	text.setCharacterSize(20);
 	text.setFillColor(Color::White);
 
@@ -180,7 +180,7 @@ int main()
 		window.draw(text);
 		
 		// Update color
-		if (frameCounter % 10 == 0)
+		if (frameCounter % 20 == 0)
 		{
 			frameColor = rainbow[colorCounter];
 			colorCounter++;

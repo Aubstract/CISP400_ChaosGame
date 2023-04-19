@@ -189,7 +189,7 @@ int main()
 				colorCounter = 0;
 			}
 
-			for (int i = 0; i < points.size(); i++)
+			for (unsigned int i = 0; i < points.size(); i++)
 			{
 				points.at(i).setFillColor(frameColor);
 				points.at(i).setOutlineColor(frameColor);
@@ -198,7 +198,7 @@ int main()
 		
 
 		// TODO: Speed this up somehow??
-		for (int i = 0; i < points.size(); i++)
+		for (unsigned int i = 0; i < points.size(); i++)
 		{
 			window.draw(points.at(i));
 		}

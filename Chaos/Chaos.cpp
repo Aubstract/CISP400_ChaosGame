@@ -1,10 +1,9 @@
-//Chaos game with Aubrey Fields and William Garica-Cortes
+//Chaos game by Aubrey Fields and William Garica-Cortes
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
 #include <vector>
-#include <cmath>
 
 using namespace sf;
 using namespace std;
@@ -40,7 +39,6 @@ int main()
 	*/
 	const int POINTS_PER_FRAME = 50;
 
-	bool pause = false;
 	bool inputFinished = false;
 
 	float width = sf::VideoMode::getDesktopMode().width;
@@ -69,16 +67,13 @@ int main()
 	*/
 
 	Font font;
-	if (!font.loadFromFile("fonts/KOMIKAP_.ttf"))
-	{
-		font.loadFromFile("fonts/IMMORTAL.ttf");
-	}
+	font.loadFromFile("fonts/KOMIKAP_.ttf");
 
 	Text text;
-	text.setPosition(width / 3, 0);
+	//text.setPosition(width / 3, 0);
 	text.setFont(font);
-	text.setString("Left click to place vertices (at least 3)\nThen right click to start the game.\nPress Esc to quit.");
-	text.setCharacterSize(50);
+	text.setString("- Left click to place vertices (at least 3)\n- Then right click to start the game.\n- Press Esc to quit.");
+	text.setCharacterSize(20);
 	text.setFillColor(Color::White);
 
 	/*
@@ -112,12 +107,6 @@ int main()
 			window.close();
 		}
 
-		/*Keybind to pause the program if you want*/
-		if (Keyboard::isKeyPressed(Keyboard::F))
-		{
-			pause = true;
-		}
-
 		while (window.pollEvent(event))
 		{
 			switch (event.type)
@@ -144,8 +133,8 @@ int main()
 						cout << "Mouse y: " << event.mouseButton.y << endl;
 
 						point.setRadius(1);
-						point.setOutlineColor(Color::Yellow);
-						point.setFillColor(Color::Yellow);
+						point.setOutlineColor(frameColor);
+						point.setFillColor(frameColor);
 						point.setOutlineThickness(1);
 						point.setPosition(event.mouseButton.x, event.mouseButton.y);
 						points.push_back(point);
@@ -164,8 +153,8 @@ int main()
 						cout << "Mouse y: " << event.mouseButton.y << endl;
 
 						point.setRadius(1);
-						point.setOutlineColor(Color::White);
-						point.setFillColor(Color::White);
+						point.setOutlineColor(frameColor);
+						point.setFillColor(frameColor);
 						point.setOutlineThickness(1);
 						point.setPosition(event.mouseButton.x, event.mouseButton.y);
 						points.push_back(point);
@@ -189,7 +178,8 @@ int main()
 		window.clear();
 
 		window.draw(text);
-
+		
+		// Update color
 		if (frameCounter % 10 == 0)
 		{
 			frameColor = rainbow[colorCounter];
@@ -213,7 +203,7 @@ int main()
 			window.draw(points.at(i));
 		}
 
-		if (inputFinished && !pause)
+		if (inputFinished)
 		{
 			for (int i = 0; i < POINTS_PER_FRAME; i++)
 			{

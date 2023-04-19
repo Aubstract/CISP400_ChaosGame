@@ -61,7 +61,7 @@ int main()
 	*/
 
 	Font font;
-	if (!font.loadFromFile("fonts/KOMIKAP_.ttf"))
+	if (!font.loadFromFile("fonts/Comic_Sans_MS.ttf"))
 	{
 		cout << "couldnt find font..." << endl;
 	}

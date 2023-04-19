@@ -183,15 +183,15 @@ int main()
 
 				/*Get the midpoint the lastpoint and a random starting point*/
 				int whichPoint = rand() % 3;
-				cout << whichPoint << endl;
+				//cout << whichPoint << endl;
 
 				/*Make a new Rectangle Shape and add it to the points vector*/
 				RectangleShape newPoint;
 				newPoint = getMidpoint(currentPoint.getPosition().x, currentPoint.getPosition().y, getX(points, whichPoint), getY(points, whichPoint));
 
-				cout << newPoint.getPosition().x << " " << newPoint.getPosition().y << endl;
+				//cout << newPoint.getPosition().x << " " << newPoint.getPosition().y << endl;
 				points.push_back(newPoint);
-				cout << "Size of points: " << points.size() << endl;
+				//cout << "Size of points: " << points.size() << endl;
 			}
 		}
 

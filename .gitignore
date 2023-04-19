@@ -1,4 +1,5 @@
 # Ignore visual studio files
+Debug
 .vs*
 *.vcx*
 *.sln

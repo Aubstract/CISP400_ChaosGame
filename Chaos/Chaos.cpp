@@ -4,17 +4,40 @@
 #include <ctime>
 #include <cstdlib>
 #include <vector>
+#include <cmath>
 
 using namespace sf;
 using namespace std;
 
-RectangleShape getMidpoint(float x1, float y1, float x2, float y2)
+CircleShape getMidpoint(float x1, float y1, float x2, float y2, float r)
 {
-	float x = (x1 + x2) / 2.0;
-	float y = (y1 + y2) / 2.0;
+	float x;
+	float y;
 
-	RectangleShape z;
-	z.setSize(Vector2f(1, 1));
+	if (x1 > x2)
+	{
+		x = (x1 - x2)* r;
+	}
+	else
+	{
+		x = (x2 - x1) * r;
+	}
+
+	if (y1 > y2)
+	{
+		y = (y1 - y2) * r;
+	}
+	else
+	{
+		y = (y2 - y1) * r;
+	}
+
+	//float x = (sqrt(pow(x2-x1, 2) + pow(y2-y1, 2))) * r;
+	//float y = (y2 + y1) * r;
+
+	CircleShape z;
+	//z.setSize(Vector2f(1, 1));
+	z.setRadius(1);
 	z.setOutlineColor(Color::Red);
 	z.setOutlineThickness(2);
 	z.setPosition(x, y);
@@ -23,12 +46,12 @@ RectangleShape getMidpoint(float x1, float y1, float x2, float y2)
 
 }
 
-double getX(vector <RectangleShape> lastPoint, int index)
+double getX(vector <CircleShape> lastPoint, int index)
 {
 	return lastPoint.at(index).getPosition().x;
 }
 
-double getY(vector <RectangleShape> lastPoint, int index)
+double getY(vector <CircleShape> lastPoint, int index)
 {
 	return lastPoint.at(index).getPosition().y;
 }
@@ -40,17 +63,21 @@ int main()
 	Value holders
 	****************************************
 	*/
+	bool pause = false;
+	const int POINTS_PER_FRAME = 5;
 	float width = sf::VideoMode::getDesktopMode().width;
 	float height = sf::VideoMode::getDesktopMode().height;
+	float r = 0.5;
 	int numPoints = 0;
-	RectangleShape currentPoint;
-	RectangleShape point;
-	currentPoint.setSize(Vector2f(1, 1));
+	CircleShape currentPoint;
+	CircleShape point;
+	//currentPoint.setSize(Vector2f(1, 1));
+	point.setRadius(1);
 	currentPoint.setOutlineColor(Color::White);
 	currentPoint.setOutlineThickness(2);
-	vector <RectangleShape> points;
+	vector <CircleShape> points;
 	srand(time(0));
-	bool stop = false;
+	bool inputFinished = false;
 
 	/*
 	****************************************
@@ -66,7 +93,7 @@ int main()
 
 	text.setFont(font);
 
-	text.setString("Please click any three points on the screen");
+	text.setString("Left click to place vertices (at least 3)\nThen right click to start the game.\nPress Esc to quit.");
 
 	text.setCharacterSize(24);
 
@@ -81,8 +108,6 @@ int main()
 	VideoMode vm(width, height);
 
 	RenderWindow window(vm, "Chaos Game", Style::Default);
-
-
 
 	Event event;
 
@@ -116,19 +141,39 @@ int main()
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == Mouse::Left)
 				{
-					if (numPoints < 4)
+					if (!inputFinished)
 					{
 						numPoints++;
 						cout << "The left mouse button was pressed" << endl;
 						cout << "Mouse x: " << event.mouseButton.x << endl;
 						cout << "Mouse y: " << event.mouseButton.y << endl;
 
-						point.setSize(Vector2f(1, 1));
-						point.setOutlineColor(Color::White);
+						//point.setSize(Vector2f(1, 1));
+						point.setRadius(1);
+						point.setOutlineColor(Color::Yellow);
 						point.setOutlineThickness(2);
 						point.setPosition(event.mouseButton.x, event.mouseButton.y);
 						points.push_back(point);
 
+					}
+				}
+				else if (event.mouseButton.button == Mouse::Right)
+				{
+					if (!inputFinished)
+					{
+						r = static_cast<float>(numPoints) / (numPoints + 3);
+						cout << "The value of r is: " << fixed << r << endl;
+						cout << "The right mouse button was pressed" << endl;
+						cout << "Mouse x: " << event.mouseButton.x << endl;
+						cout << "Mouse y: " << event.mouseButton.y << endl;
+
+						//point.setSize(Vector2f(1, 1));
+						point.setRadius(1);
+						point.setOutlineColor(Color::White);
+						point.setOutlineThickness(2);
+						point.setPosition(event.mouseButton.x, event.mouseButton.y);
+						points.push_back(point);
+						inputFinished = true;
 					}
 				}
 				break;
@@ -136,9 +181,9 @@ int main()
 			default:
 				break;
 			}
-
-
 		}
+
+
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			window.close();
@@ -162,19 +207,14 @@ int main()
 			}
 		}
 
-		
 		/*Keybind to stop the program if you want*/
-		/*
 		if (Keyboard::isKeyPressed(Keyboard::F))
 		{
-			stop = true;
+			pause = true;
 		}
-		*/
 
-		if (!stop && numPoints > 3)
+		if (inputFinished && !pause)
 		{
-			const int POINTS_PER_FRAME = 5;
-
 			for (int i = 0; i < POINTS_PER_FRAME; i++)
 			{
 				/*Mark the starting position*/
@@ -182,14 +222,15 @@ int main()
 
 
 				/*Get the midpoint the lastpoint and a random starting point*/
-				int whichPoint = rand() % 3;
-				cout << whichPoint << endl;
+				int whichPoint = rand() % numPoints;
+				cout << "Random point: " << whichPoint << endl;
 
 				/*Make a new Rectangle Shape and add it to the points vector*/
-				RectangleShape newPoint;
-				newPoint = getMidpoint(currentPoint.getPosition().x, currentPoint.getPosition().y, getX(points, whichPoint), getY(points, whichPoint));
+				CircleShape newPoint;
+				newPoint = getMidpoint(currentPoint.getPosition().x, currentPoint.getPosition().y, getX(points, whichPoint), getY(points, whichPoint), r);
 
-				cout << newPoint.getPosition().x << " " << newPoint.getPosition().y << endl;
+				cout << "New point X: " << newPoint.getPosition().x << endl;
+				cout << "New point y: " << newPoint.getPosition().y << endl;
 				points.push_back(newPoint);
 				cout << "Size of points: " << points.size() << endl;
 			}

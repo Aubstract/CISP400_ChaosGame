@@ -32,6 +32,7 @@ double getY(vector <RectangleShape> lastPoint, int index)
 {
 	return lastPoint.at(index).getPosition().y;
 }
+
 int main()
 {
 	/*
@@ -39,6 +40,8 @@ int main()
 	Value holders
 	****************************************
 	*/
+	float width = sf::VideoMode::getDesktopMode().width;
+	float height = sf::VideoMode::getDesktopMode().height;
 	int numPoints = 0;
 	RectangleShape currentPoint;
 	RectangleShape point;
@@ -56,10 +59,9 @@ int main()
 	*/
 
 	Font font;
-	if (!font.loadFromFile("fonts\\IMMORTAL.ttf"))
-	{
 
-	}
+	font.loadFromFile("fonts\\IMMORTAL.ttf");
+
 	Text text;
 
 	text.setFont(font);
@@ -76,7 +78,7 @@ int main()
 	****************************************
 	*/
 
-	VideoMode vm(1920, 1080);
+	VideoMode vm(width, height);
 
 	RenderWindow window(vm, "Chaos Game", Style::Default);
 
@@ -160,29 +162,37 @@ int main()
 			}
 		}
 
+		
 		/*Keybind to stop the program if you want*/
+		/*
 		if (Keyboard::isKeyPressed(Keyboard::F))
 		{
 			stop = true;
 		}
+		*/
+
 		if (!stop && numPoints > 3)
 		{
+			const int POINTS_PER_FRAME = 5;
 
-			/*Mark the starting position*/
-			currentPoint.setPosition(getX(points, points.size() - 1), getY(points, points.size() - 1));
+			for (int i = 0; i < POINTS_PER_FRAME; i++)
+			{
+				/*Mark the starting position*/
+				currentPoint.setPosition(getX(points, points.size() - 1), getY(points, points.size() - 1));
 
 
-			/*Get the midpoint the lastpoint and a random starting point*/
-			int whichPoint = rand() % 3;
-			cout << whichPoint << endl;
+				/*Get the midpoint the lastpoint and a random starting point*/
+				int whichPoint = rand() % 3;
+				cout << whichPoint << endl;
 
-			/*Make a new Rectangle Shape and add it to the points vector*/
-			RectangleShape newPoint;
-			newPoint = getMidpoint(currentPoint.getPosition().x, currentPoint.getPosition().y, getX(points, whichPoint), getY(points, whichPoint));
+				/*Make a new Rectangle Shape and add it to the points vector*/
+				RectangleShape newPoint;
+				newPoint = getMidpoint(currentPoint.getPosition().x, currentPoint.getPosition().y, getX(points, whichPoint), getY(points, whichPoint));
 
-			cout << newPoint.getPosition().x << " " << newPoint.getPosition().y << endl;
-			points.push_back(newPoint);
-			cout << "Size of points: " << points.size() << endl;
+				cout << newPoint.getPosition().x << " " << newPoint.getPosition().y << endl;
+				points.push_back(newPoint);
+				cout << "Size of points: " << points.size() << endl;
+			}
 		}
 
 		window.display();

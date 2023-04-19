@@ -111,14 +111,9 @@ int main()
 		{
 			switch (event.type)
 			{
+
 			case Event::Closed:
 				window.close();
-				cout << "Closed Chaos Game" << endl;
-				break;
-
-			case Event::Resized:
-				cout << "New width: " << event.size.width << endl;
-				cout << "New height: " << event.size.height << endl;
 				break;
 
 			case Event::MouseButtonPressed:
@@ -127,10 +122,6 @@ int main()
 					if (!inputFinished)
 					{
 						numPoints++;
-
-						cout << "The left mouse button was pressed" << endl;
-						cout << "Mouse x: " << event.mouseButton.x << endl;
-						cout << "Mouse y: " << event.mouseButton.y << endl;
 
 						point.setRadius(1);
 						point.setOutlineColor(frameColor);
@@ -146,19 +137,14 @@ int main()
 					if (!inputFinished)
 					{
 						ratio = static_cast<float>(numPoints) / (numPoints + 3);
-						cout << "The value of ratio is: " << fixed << ratio << endl;
-
-						cout << "The right mouse button was pressed" << endl;
-						cout << "Mouse x: " << event.mouseButton.x << endl;
-						cout << "Mouse y: " << event.mouseButton.y << endl;
+						inputFinished = true;
 
 						point.setRadius(1);
 						point.setOutlineColor(frameColor);
 						point.setFillColor(frameColor);
 						point.setOutlineThickness(1);
 						point.setPosition(event.mouseButton.x, event.mouseButton.y);
-						points.push_back(point);
-						inputFinished = true;
+						points.push_back(point);	
 					}
 				}
 				break;
@@ -213,19 +199,14 @@ int main()
 				/*Choose a random vertex (the initial points)*/
 				int randInt = rand() % numPoints;
 				CircleShape randVertex = points.at(randInt);
-				cout << "Random point: " << randInt << endl;
 
 				/* Make a new Circleshape and calculate it's position between 
 				the current point and the random vertex */
 				CircleShape newPoint;
 				newPoint = getPosBetweenPoints(currentPoint, randVertex, ratio, frameColor);
 
-				cout << "New point X: " << newPoint.getPosition().x << endl;
-				cout << "New point y: " << newPoint.getPosition().y << endl;
-
 				/* Add the new point to the points vector*/
 				points.push_back(newPoint);
-				cout << "Size of points: " << points.size() << endl;
 			}
 		}
 

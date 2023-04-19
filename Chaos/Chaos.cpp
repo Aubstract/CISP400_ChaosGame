@@ -183,14 +183,6 @@ int main()
 		****************************************
 		*/
 
-		FloatRect textRect = text.getLocalBounds();
-		text.setOrigin(textRect.left +
-			textRect.width / 2.0f,
-			textRect.top +
-			textRect.height / 2.0f);
-
-		text.setPosition(width / 2, 50);
-
 		window.clear();
 
 		window.draw(text);

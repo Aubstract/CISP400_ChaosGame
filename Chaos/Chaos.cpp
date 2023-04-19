@@ -75,7 +75,7 @@ int main()
 	//text.setPosition(width / 3, 0);
 	text.setFont(font);
 	text.setString("Left click to place vertices (at least 3)\nThen right click to start the game.\nPress Esc to quit.");
-	text.setCharacterSize(24);
+	text.setCharacterSize(50);
 	text.setFillColor(Color::White);
 
 	/*

@@ -9,7 +9,7 @@
 using namespace sf;
 using namespace std;
 
-CircleShape getPosBetweenPoints(CircleShape current, CircleShape vertex, float ratio)
+CircleShape getPosBetweenPoints(CircleShape current, CircleShape vertex, float ratio, Color frameColor)
 {
 	float x1 = current.getPosition().x;
 	float y1 = current.getPosition().y;
@@ -22,8 +22,8 @@ CircleShape getPosBetweenPoints(CircleShape current, CircleShape vertex, float r
 
 	CircleShape z;
 	z.setRadius(1);
-	z.setFillColor(Color::Red);
-	z.setOutlineColor(Color::Red);
+	z.setFillColor(frameColor);
+	z.setOutlineColor(frameColor);
 	z.setOutlineThickness(1);
 	z.setPosition(x3, y3);
 
@@ -38,7 +38,7 @@ int main()
 	Init values
 	****************************************
 	*/
-	const int POINTS_PER_FRAME = 10;
+	const int POINTS_PER_FRAME = 50;
 
 	bool pause = false;
 	bool inputFinished = false;
@@ -48,13 +48,19 @@ int main()
 
 	float ratio;
 	int numPoints = 0;
+	int colorCounter = 0;
+	int frameCounter = 0;
 
 	vector <CircleShape> points;
 
 	CircleShape currentPoint;
 	CircleShape point;
+
+	Color rainbow[6] = { Color::Red, Color::Yellow, Color::Green, Color::Cyan, Color::Blue, Color::Magenta };
+	Color frameColor = rainbow[colorCounter];
 	
 	srand(time(0));
+
 	
 	/*
 	****************************************
@@ -180,6 +186,23 @@ int main()
 
 		window.draw(text);
 
+		if (frameCounter % 10 == 0)
+		{
+			frameColor = rainbow[colorCounter];
+			colorCounter++;
+			if (colorCounter >= 6)
+			{
+				colorCounter = 0;
+			}
+
+			for (int i = 0; i < points.size(); i++)
+			{
+				points.at(i).setFillColor(frameColor);
+				points.at(i).setOutlineColor(frameColor);
+			}
+		}
+		
+
 		// TODO: Speed this up somehow??
 		for (int i = 0; i < points.size(); i++)
 		{
@@ -201,7 +224,7 @@ int main()
 				/* Make a new Circleshape and calculate it's position between 
 				the current point and the random vertex */
 				CircleShape newPoint;
-				newPoint = getPosBetweenPoints(currentPoint, randVertex, ratio);
+				newPoint = getPosBetweenPoints(currentPoint, randVertex, ratio, frameColor);
 
 				cout << "New point X: " << newPoint.getPosition().x << endl;
 				cout << "New point y: " << newPoint.getPosition().y << endl;
@@ -212,6 +235,7 @@ int main()
 			}
 		}
 
+		frameCounter++;
 		window.display();
 	}
 

@@ -9,76 +9,52 @@
 using namespace sf;
 using namespace std;
 
-CircleShape getMidpoint(float x1, float y1, float x2, float y2, float r)
+CircleShape getPosBetweenPoints(CircleShape current, CircleShape vertex, float ratio)
 {
-	float x;
-	float y;
+	float x1 = current.getPosition().x;
+	float y1 = current.getPosition().y;
+	float x2 = vertex.getPosition().x;
+	float y2 = vertex.getPosition().y;
 
-	if (x1 > x2)
-	{
-		x = (x1 - x2)* r;
-	}
-	else
-	{
-		x = (x2 - x1) * r;
-	}
-
-	if (y1 > y2)
-	{
-		y = (y1 - y2) * r;
-	}
-	else
-	{
-		y = (y2 - y1) * r;
-	}
-
-	//float x = (sqrt(pow(x2-x1, 2) + pow(y2-y1, 2))) * r;
-	//float y = (y2 + y1) * r;
+	float x3 = (x1 + x2) * ratio;
+	float y3 = (y1 + y2) * ratio;
 
 	CircleShape z;
-	//z.setSize(Vector2f(1, 1));
 	z.setRadius(1);
+	z.setFillColor(Color::Red);
 	z.setOutlineColor(Color::Red);
-	z.setOutlineThickness(2);
-	z.setPosition(x, y);
+	z.setOutlineThickness(1);
+	z.setPosition(x3, y3);
 
 	return z;
 
-}
-
-double getX(vector <CircleShape> lastPoint, int index)
-{
-	return lastPoint.at(index).getPosition().x;
-}
-
-double getY(vector <CircleShape> lastPoint, int index)
-{
-	return lastPoint.at(index).getPosition().y;
 }
 
 int main()
 {
 	/*
 	****************************************
-	Value holders
+	Init values
 	****************************************
 	*/
+	const int POINTS_PER_FRAME = 10;
+
 	bool pause = false;
-	const int POINTS_PER_FRAME = 5;
-	float width = sf::VideoMode::getDesktopMode().width;
-	float height = sf::VideoMode::getDesktopMode().height;
-	float r = 0.5;
-	int numPoints = 0;
-	CircleShape currentPoint;
-	CircleShape point;
-	//currentPoint.setSize(Vector2f(1, 1));
-	point.setRadius(1);
-	currentPoint.setOutlineColor(Color::White);
-	currentPoint.setOutlineThickness(2);
-	vector <CircleShape> points;
-	srand(time(0));
 	bool inputFinished = false;
 
+	float width = sf::VideoMode::getDesktopMode().width;
+	float height = sf::VideoMode::getDesktopMode().height;
+
+	float ratio;
+	int numPoints = 0;
+
+	vector <CircleShape> points;
+
+	CircleShape currentPoint;
+	CircleShape point;
+	
+	srand(time(0));
+	
 	/*
 	****************************************
 	Set up the text
@@ -86,17 +62,12 @@ int main()
 	*/
 
 	Font font;
-
 	font.loadFromFile("fonts\\IMMORTAL.ttf");
 
 	Text text;
-
 	text.setFont(font);
-
 	text.setString("Left click to place vertices (at least 3)\nThen right click to start the game.\nPress Esc to quit.");
-
 	text.setCharacterSize(24);
-
 	text.setFillColor(Color::White);
 
 	/*
@@ -124,6 +95,18 @@ int main()
 		Handle the players input
 		****************************************
 		*/
+
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			window.close();
+		}
+
+		/*Keybind to pause the program if you want*/
+		if (Keyboard::isKeyPressed(Keyboard::F))
+		{
+			pause = true;
+		}
+
 		while (window.pollEvent(event))
 		{
 			switch (event.type)
@@ -144,14 +127,15 @@ int main()
 					if (!inputFinished)
 					{
 						numPoints++;
+
 						cout << "The left mouse button was pressed" << endl;
 						cout << "Mouse x: " << event.mouseButton.x << endl;
 						cout << "Mouse y: " << event.mouseButton.y << endl;
 
-						//point.setSize(Vector2f(1, 1));
 						point.setRadius(1);
 						point.setOutlineColor(Color::Yellow);
-						point.setOutlineThickness(2);
+						point.setFillColor(Color::Yellow);
+						point.setOutlineThickness(1);
 						point.setPosition(event.mouseButton.x, event.mouseButton.y);
 						points.push_back(point);
 
@@ -161,16 +145,17 @@ int main()
 				{
 					if (!inputFinished)
 					{
-						r = static_cast<float>(numPoints) / (numPoints + 3);
-						cout << "The value of r is: " << fixed << r << endl;
+						ratio = static_cast<float>(numPoints) / (numPoints + 3);
+						cout << "The value of ratio is: " << fixed << ratio << endl;
+
 						cout << "The right mouse button was pressed" << endl;
 						cout << "Mouse x: " << event.mouseButton.x << endl;
 						cout << "Mouse y: " << event.mouseButton.y << endl;
 
-						//point.setSize(Vector2f(1, 1));
 						point.setRadius(1);
 						point.setOutlineColor(Color::White);
-						point.setOutlineThickness(2);
+						point.setFillColor(Color::White);
+						point.setOutlineThickness(1);
 						point.setPosition(event.mouseButton.x, event.mouseButton.y);
 						points.push_back(point);
 						inputFinished = true;
@@ -184,12 +169,6 @@ int main()
 		}
 
 
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-		{
-			window.close();
-		}
-
-
 		/*
 		****************************************
 		Display
@@ -200,44 +179,39 @@ int main()
 
 		window.draw(text);
 
+		// TODO: Speed this up somehow??
+		for (int i = 0; i < points.size(); i++)
 		{
-			for (int i = 0; i < points.size(); i++)
-			{
-				window.draw(points.at(i));
-			}
-		}
-
-		/*Keybind to stop the program if you want*/
-		if (Keyboard::isKeyPressed(Keyboard::F))
-		{
-			pause = true;
+			window.draw(points.at(i));
 		}
 
 		if (inputFinished && !pause)
 		{
 			for (int i = 0; i < POINTS_PER_FRAME; i++)
 			{
-				/*Mark the starting position*/
-				currentPoint.setPosition(getX(points, points.size() - 1), getY(points, points.size() - 1));
+				/*Current point is the most recently generated one*/
+				currentPoint = points.back();
 
+				/*Choose a random vertex (the initial points)*/
+				int randInt = rand() % numPoints;
+				CircleShape randVertex = points.at(randInt);
+				cout << "Random point: " << randInt << endl;
 
-				/*Get the midpoint the lastpoint and a random starting point*/
-				int whichPoint = rand() % numPoints;
-				cout << "Random point: " << whichPoint << endl;
-
-				/*Make a new Rectangle Shape and add it to the points vector*/
+				/* Make a new Circleshape and calculate it's position between 
+				the current point and the random vertex */
 				CircleShape newPoint;
-				newPoint = getMidpoint(currentPoint.getPosition().x, currentPoint.getPosition().y, getX(points, whichPoint), getY(points, whichPoint), r);
+				newPoint = getPosBetweenPoints(currentPoint, randVertex, ratio);
 
 				cout << "New point X: " << newPoint.getPosition().x << endl;
 				cout << "New point y: " << newPoint.getPosition().y << endl;
+
+				/* Add the new point to the points vector*/
 				points.push_back(newPoint);
-				//cout << "Size of points: " << points.size() << endl;
+				cout << "Size of points: " << points.size() << endl;
 			}
 		}
 
 		window.display();
-
 	}
 
 	return 0;

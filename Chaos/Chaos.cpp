@@ -232,7 +232,7 @@ int main()
 				cout << "New point X: " << newPoint.getPosition().x << endl;
 				cout << "New point y: " << newPoint.getPosition().y << endl;
 				points.push_back(newPoint);
-				cout << "Size of points: " << points.size() << endl;
+				//cout << "Size of points: " << points.size() << endl;
 			}
 		}
 

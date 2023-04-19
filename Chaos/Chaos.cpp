@@ -152,13 +152,9 @@ int main()
 
 		/*
 		****************************************
-		Display
+		Update
 		****************************************
 		*/
-
-		window.clear();
-
-		window.draw(text);
 
 		// Generate new points
 		if (inputFinished)
@@ -203,13 +199,24 @@ int main()
 			}
 		}
 
+		frameCounter++;
+
+		/*
+		****************************************
+		Display
+		****************************************
+		*/
+
+		window.clear();
+		
+		window.draw(text);
+
 		// Draw points
 		for (unsigned int i = 0; i < points.size(); i++)
 		{
 			window.draw(points.at(i));
 		}
 
-		frameCounter++;
 		window.display();
 	}
 

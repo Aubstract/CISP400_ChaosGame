@@ -72,7 +72,7 @@ int main()
 	font.loadFromFile("fonts\\IMMORTAL.ttf");
 
 	Text text;
-	text.setPosition(width / 3, 0);
+	//text.setPosition(width / 3, 0);
 	text.setFont(font);
 	text.setString("Left click to place vertices (at least 3)\nThen right click to start the game.\nPress Esc to quit.");
 	text.setCharacterSize(24);
@@ -182,6 +182,14 @@ int main()
 		Display
 		****************************************
 		*/
+
+		FloatRect textRect = text.getLocalBounds();
+		text.setOrigin(textRect.left +
+			textRect.width / 2.0f,
+			textRect.top +
+			textRect.height / 2.0f);
+
+		text.setPosition(width / 2, 50);
 
 		window.clear();
 

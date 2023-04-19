@@ -13,11 +13,12 @@ CircleShape getPosBetweenPoints(CircleShape current, CircleShape vertex, float r
 {
 	float x1 = current.getPosition().x;
 	float y1 = current.getPosition().y;
+
 	float x2 = vertex.getPosition().x;
 	float y2 = vertex.getPosition().y;
 
-	float x3 = (x1 + x2) * ratio;
-	float y3 = (y1 + y2) * ratio;
+	float x3 = x1 + ((x2 - x1) * ratio);
+	float y3 = y1 + ((y2 - y1) * ratio);
 
 	CircleShape z;
 	z.setRadius(1);
